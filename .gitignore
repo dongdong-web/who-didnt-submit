@@ -7,9 +7,10 @@ venv/
 env/
 
 # ---- PyInstaller ----
-# build/ 是中间产物（十几 MB），dist/ 是成品 —— 都能一条命令重建
-build/
-dist/
+# build*/ dist*/ 用通配是因为打过多次包（build_onefile / dist_onefile 之类），
+# 只写 build/ dist/ 会漏掉它们 —— 曾经因此把一个 14MB 的 exe 提交进去过。
+build*/
+dist*/
 *.spec
 
 # ---- 自测产物 ----
