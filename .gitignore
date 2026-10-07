@@ -1,0 +1,37 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ---- PyInstaller ----
+# build/ 是中间产物（十几 MB），dist/ 是成品 —— 都能一条命令重建
+build/
+dist/
+*.spec
+
+# ---- 自测产物 ----
+# --noconsole 打包后看不到 stdout，自测结果会写成文件，别提交进来
+谁没交_selftest.txt
+谁没交_droptest.txt
+谁没交_crash.txt
+
+# ---- 一次性探针 ----
+# 排查问题时随手写的小脚本，不留在仓库里
+_*.py
+!__init__.py
+_*.png
+
+# ---- 模拟数据 ----
+# 138 个文件全由 make_sample_data.py 生成，需要就先跑一遍：
+#   python make_sample_data.py
+模拟数据/
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
