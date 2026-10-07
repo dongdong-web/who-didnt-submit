@@ -1,0 +1,6 @@
+# 统一用 LF：Windows 上开发、Linux/Mac 上跑都不要出乱子
+* text=auto eol=lf
+
+# 二进制别碰
+*.png binary
+*.ico binary
