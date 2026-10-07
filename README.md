@@ -316,7 +316,8 @@ clone 下来先跑一次 `make_sample_data.py` 就有了。
 
 ```powershell
 python make_icon.py
-python -m PyInstaller --onedir --noconsole --icon icon.ico --name "谁没交" `
+python -m PyInstaller --onefile --noconsole --icon icon.ico --name "谁没交" `
+    --runtime-tmpdir . `
     --clean --noconfirm --distpath dist --workpath build `
     --collect-all tkinterdnd2 `
     --exclude-module numpy --exclude-module pandas --exclude-module lxml `
@@ -325,21 +326,30 @@ python -m PyInstaller --onedir --noconsole --icon icon.ico --name "谁没交" `
     --hidden-import content --hidden-import pypinyin app.py
 ```
 
-产出是 `dist/谁没交/` 整个目录（约 37MB），双击里面的 `谁没交.exe`。
-分发时把这个目录压成 zip 就行（约 14MB）。
+产出是**单个** `dist/谁没交.exe`（约 14MB），双击就能用，直接发给别人也行。
 
-**为什么用 `--onedir` 而不是 `--onefile`：**
+**`--runtime-tmpdir .` 这一条不能省。**
 
-`--onefile` 每次启动都要把自己解压到系统临时目录（`%TEMP%\_MEIxxxx`），
-解压不出来就直接死，而且 `--noconsole` 下**连报错都看不见**——窗口一闪就没了。
-本机就踩到了：
+onefile 每次启动都要把自己解压到 `%TEMP%\_MEIxxxx`。那个目录一旦不可用，
+bootloader 直接报错退出：
 
 ```
-[PYI-29756:ERROR] Could not create temporary directory!
+Could not create temporary directory!
 ```
 
-`--onedir` 不需要运行时解压，启动更快，也不赌系统临时目录好不好使。
-代价是体积从 12MB 变成 31MB、以及多一层目录。
+**而 `--noconsole` 下连这个报错都看不见**，表现就是「双击没反应」。
+
+本机就撞上了：`%TEMP%` 被沙箱工具改坏（有 6 个目录连 `icacls` 都读不了，
+`takeown` 也抢不回来）。**最坑的是 PowerShell 在同一个 `%TEMP%` 里建目录、
+写文件全都正常**，所以很容易误判成「onefile 不能用」，退回 onedir ——
+而 onedir 是几十个文件加一个 `_internal/`，对"发给老师"这个场景是致命的。
+
+`--runtime-tmpdir .` 让 bootloader 解压到 **exe 自己旁边**，绕开 `%TEMP%`。
+代价是 exe 所在位置必须可写（桌面/文档/下载夹都行，
+`C:\Program Files` 或只读盘不行）。
+
+> 如果你那边的 `%TEMP%` 是好的，去掉这条也能跑；
+> 但留着它对所有机器都更稳，**建议别去掉**。
 
 那几个 `--exclude-module` 都是必须的，而且埋着一个坑：
 
