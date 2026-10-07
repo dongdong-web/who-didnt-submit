@@ -4,7 +4,13 @@
 
 ![界面预览](界面预览.png)
 
-不用装 Python，双击 `dist/谁没交/谁没交.exe` 就行。
+**直接下载用**（不用装 Python）：
+[Releases](https://github.com/dongdong-web/who-didnt-submit/releases/latest) →
+下 `who-didnt-submit-v0.1.0.zip`，解压后双击里面的 `谁没交.exe`。
+
+> 第一次打开可能提示「可能有害」——**这是 Windows 对下载来的 exe 的常规提示，
+> 不是病毒**。点「确定」放行即可，程序会自己清掉这个标记，以后不再弹。
+> 详见下面[「下载后提示可能有害」](#下载后提示可能有害怎么办)。
 
 > 这份是**给用的人**看的。架构、测试体系、踩过的坑、可拓展方向
 > 看 [项目说明.md](项目说明.md)。
