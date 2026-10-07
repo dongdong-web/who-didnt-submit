@@ -8,10 +8,15 @@ env/
 
 # ---- PyInstaller ----
 # build*/ dist*/ 用通配是因为打过多次包（build_onefile / dist_onefile 之类），
-# 只写 build/ dist/ 会漏掉它们 —— 曾经因此把一个 14MB 的 exe 提交进去过。
+# 只写 build/ dist/ 会漏掉它们。
 build*/
 dist*/
 *.spec
+
+# ---- 打包好的成品 ----
+# exe 十几 MB，是分发给用户的东西，不该进代码仓库。
+# 已经从历史里清过两次了，这次连根目录一起挡上。
+*.exe
 
 # ---- 自测产物 ----
 # --noconsole 打包后看不到 stdout，自测结果会写成文件，别提交进来
