@@ -1343,6 +1343,28 @@ def droptest() -> int:
     return bad + nonlocal_bad[0]
 
 
+def clear_motw() -> bool:
+    """去掉「来自 Internet」标记。
+
+    从网上下的 exe，Windows 会打一个 Zone.Identifier 备用数据流，
+    每次双击都弹「打开这些文件可能会对你的计算机有害」。老师看到这个
+    多半就不敢用了 —— 对一个要靠人传人的小工具来说这是致命的。
+
+    用户点过一次「确定」放行之后，程序启动时顺手把标记删掉，以后不再烦他。
+    删的是 NTFS 备用数据流，不是文件本身，对代码没有任何影响。
+    """
+    if sys.platform != "win32" or not getattr(sys, "frozen", False):
+        return False
+    try:
+        ads = Path(f"{Path(sys.executable).resolve()}:Zone.Identifier")
+        if ads.exists():
+            ads.unlink()
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def _write_crash(text: str) -> None:
     """打包成 --noconsole 之后，崩溃是彻底看不见的，至少留个文件。"""
     try:
@@ -1354,6 +1376,9 @@ def _write_crash(text: str) -> None:
 
 
 if __name__ == "__main__":
+    # 放最前面：不管走哪个入口，都先把「来自 Internet」标记清掉。
+    # 放 main() 里的话，--selftest / --droptest 就绕过去了。
+    clear_motw()
     try:
         if "--selftest" in sys.argv:
             raise SystemExit(selftest())
